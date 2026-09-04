@@ -1,0 +1,35 @@
+name: Cron Check Deadlines
+
+# Jadwal "0 * * * *" (tiap jam, menit ke-0) berjalan dalam UTC. WIB = UTC+7,
+# yaitu offset bilangan bulat jam — jadi setiap kali cron ini jatuh di menit
+# ke-0 UTC, otomatis juga jatuh di menit ke-0 waktu WIB (cuma beda label jam,
+# misal 00:00 UTC = 07:00 WIB, 01:00 UTC = 08:00 WIB, dst). Karena workflow
+# ini jalan tiap jam sepanjang hari, tidak perlu menggeser menit/jam cron-nya
+# untuk "align" ke WIB — keduanya sudah selaras di setiap kelipatan jam.
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  check-deadlines:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Panggil /check-deadlines (dengan retry sekali)
+        run: |
+          if [ -z "${{ secrets.RENDER_URL }}" ]; then
+            echo "Secret RENDER_URL belum di-set — asumsi bot sedang jalan mode lokal (bukan Render). Skip, tidak dianggap gagal."
+            exit 0
+          fi
+
+          call() {
+            curl -sS -f -X POST "${{ secrets.RENDER_URL }}/check-deadlines" \
+              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              --max-time 30
+          }
+
+          call || {
+            echo "Percobaan pertama gagal (mungkin Render lagi cold start). Retry dalam 20 detik..."
+            sleep 20
+            call
+          }

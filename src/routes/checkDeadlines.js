@@ -7,7 +7,8 @@ function createCheckDeadlinesRouter(bot) {
 
   router.all('/check-deadlines', async (req, res) => {
     if (env.cronSecret) {
-      const provided = req.get('X-Cron-Secret');
+      const authHeader = req.get('Authorization') || '';
+      const provided = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
       if (provided !== env.cronSecret) {
         return res.status(401).json({ error: 'unauthorized' });
       }
