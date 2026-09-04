@@ -1,0 +1,19 @@
+{
+  "name": "arhitec-realms-bot",
+  "version": "1.0.0",
+  "description": "Chatbot Telegram: Manajemen Tugas & Tracking Keuangan",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "telegraf": "^4.16.3"
+  }
+}
