@@ -214,4 +214,12 @@ bot.action('confirm_cancel', async (ctx) => {
   await ctx.editMessageText('❌ Dibatalkan, tidak ada data yang disimpan.');
 });
 
+// Tanpa ini, error yang terjadi saat memproses satu update (misal tabel
+// belum ada, Gemini timeout, dll) akan merambat ke atas dan menghentikan
+// seluruh long polling — bot jadi diam total sampai proses di-restart.
+bot.catch((err, ctx) => {
+  console.error(`[bot] error saat proses update ${ctx.updateType}:`, err);
+  ctx.reply('Maaf, terjadi kesalahan saat memproses permintaan kamu. Coba lagi.').catch(() => {});
+});
+
 module.exports = bot;
