@@ -22,6 +22,7 @@ function loadEnv() {
     geminiVisionModel: process.env.GEMINI_VISION_MODEL || 'gemini-2.5-flash-lite',
     port: parseInt(process.env.PORT, 10) || 3000,
     cronSecret: process.env.CRON_SECRET || '',
+    useInternalCron: process.env.USE_INTERNAL_CRON === 'true',
   };
 }
 
