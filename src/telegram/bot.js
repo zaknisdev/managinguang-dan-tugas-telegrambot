@@ -222,4 +222,15 @@ bot.catch((err, ctx) => {
   ctx.reply('Maaf, terjadi kesalahan saat memproses permintaan kamu. Coba lagi.').catch(() => {});
 });
 
+// Daftarkan command ke menu "/" Telegram supaya muncul di autocomplete.
+bot.telegram
+  .setMyCommands([
+    { command: 'start', description: 'Mulai & lihat menu bantuan' },
+    { command: 'tambahtugas', description: 'Tambah tugas baru' },
+    { command: 'tugas', description: 'Lihat daftar tugas pending' },
+    { command: 'laporan', description: 'Laporan keuangan (minggu/bulan/tahun)' },
+  ])
+  .then(() => console.log('[bot] command menu terdaftar'))
+  .catch((err) => console.error('[bot] gagal daftar command menu:', err));
+
 module.exports = bot;
